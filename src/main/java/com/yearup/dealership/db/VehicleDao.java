@@ -193,12 +193,71 @@ public class VehicleDao {
 
     public List<Vehicle> searchByMileageRange(int minMileage, int maxMileage) {
         // TODO: Implement the logic to search vehicles by mileage range
-        return new ArrayList<>();
+        List<Vehicle> vehicles = new ArrayList<>();
+
+        String sql = "SELECT VIN, make, model, year, SOLD, color, vehicleType, odometer, price FROM vehicles WHERE odometer BETWEEN ? AND ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, minMileage);
+            preparedStatement.setInt(2, maxMileage);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Vehicle vehicle = new Vehicle();
+                vehicle.setVin(resultSet.getString("VIN"));
+                vehicle.setMake(resultSet.getString("make"));
+                vehicle.setModel(resultSet.getString("model"));
+                vehicle.setYear(resultSet.getInt("year"));
+                vehicle.setSold(resultSet.getBoolean("SOLD"));
+                vehicle.setColor(resultSet.getString("color"));
+                vehicle.setVehicleType(resultSet.getString("vehicleType"));
+                vehicle.setOdometer(resultSet.getInt("odometer"));
+                vehicle.setPrice(resultSet.getDouble("price"));
+
+                vehicles.add(vehicle);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return vehicles;
     }
 
     public List<Vehicle> searchByType(String type) {
         // TODO: Implement the logic to search vehicles by type
-        return new ArrayList<>();
+        List<Vehicle> vehicles = new ArrayList<>();
+
+        String sql = "SELECT VIN, make, model, year, SOLD, color, vehicleType, odometer, price FROM vehicles WHERE vehicleType = ?";
+
+        try (Connection connection = dataSource.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, type);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Vehicle vehicle = new Vehicle();
+                vehicle.setVin(resultSet.getString("VIN"));
+                vehicle.setMake(resultSet.getString("make"));
+                vehicle.setModel(resultSet.getString("model"));
+                vehicle.setYear(resultSet.getInt("year"));
+                vehicle.setSold(resultSet.getBoolean("SOLD"));
+                vehicle.setColor(resultSet.getString("color"));
+                vehicle.setVehicleType(resultSet.getString("vehicleType"));
+                vehicle.setOdometer(resultSet.getInt("odometer"));
+                vehicle.setPrice(resultSet.getDouble("price"));
+
+                vehicles.add(vehicle);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return vehicles;
     }
 
     private Vehicle createVehicleFromResultSet(ResultSet resultSet) throws SQLException {
