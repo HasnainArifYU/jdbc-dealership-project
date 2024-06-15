@@ -28,9 +28,7 @@ public class VehicleDao {
             preparedStatement.setString(7, vehicle.getVehicleType());
             preparedStatement.setInt(8, vehicle.getOdometer());
             preparedStatement.setDouble(9, vehicle.getPrice());
-
             int rows = preparedStatement.executeUpdate();
-
             System.out.println("Rows inserted: " + rows);
         }
         catch (Exception ex){
@@ -43,13 +41,9 @@ public class VehicleDao {
         // TODO: Implement the logic to remove a vehicle
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM vehicles WHERE VIN = ?")) {
-
             preparedStatement.setString(1, VIN);
-
             int rows = preparedStatement.executeUpdate();
             System.out.println("Rows deleted: " + rows);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,12 +56,9 @@ public class VehicleDao {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT VIN, make, model, year, SOLD, color, vehicleType, odometer, price FROM vehicles WHERE price BETWEEN ? AND ?")) {
-
             preparedStatement.setDouble(1, minPrice);
             preparedStatement.setDouble(2, maxPrice);
-
             ResultSet resultSet = preparedStatement.executeQuery();
-
             while (resultSet.next()) {
                 Vehicle vehicle = new Vehicle();
                 vehicle.setVin(resultSet.getString("VIN"));
@@ -79,13 +70,12 @@ public class VehicleDao {
                 vehicle.setVehicleType(resultSet.getString("vehicleType"));
                 vehicle.setOdometer(resultSet.getInt("odometer"));
                 vehicle.setPrice(resultSet.getDouble("price"));
-
                 vehicles.add(vehicle);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return new ArrayList<>();
+        return vehicles;
     }
 
     public List<Vehicle> searchByMakeModel(String make, String model) {
@@ -96,12 +86,9 @@ public class VehicleDao {
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
             preparedStatement.setString(1, make);
             preparedStatement.setString(2, model);
-
             ResultSet resultSet = preparedStatement.executeQuery();
-
             while (resultSet.next()) {
                 Vehicle vehicle = new Vehicle();
                 vehicle.setVin(resultSet.getString("VIN"));
@@ -113,7 +100,6 @@ public class VehicleDao {
                 vehicle.setVehicleType(resultSet.getString("vehicleType"));
                 vehicle.setOdometer(resultSet.getInt("odometer"));
                 vehicle.setPrice(resultSet.getDouble("price"));
-
                 vehicles.add(vehicle);
             }
         } catch (SQLException ex) {
@@ -130,12 +116,9 @@ public class VehicleDao {
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
             preparedStatement.setInt(1, minYear);
             preparedStatement.setInt(2, maxYear);
-
             ResultSet resultSet = preparedStatement.executeQuery();
-
             while (resultSet.next()) {
                 Vehicle vehicle = new Vehicle();
                 vehicle.setVin(resultSet.getString("VIN"));
@@ -147,7 +130,6 @@ public class VehicleDao {
                 vehicle.setVehicleType(resultSet.getString("vehicleType"));
                 vehicle.setOdometer(resultSet.getInt("odometer"));
                 vehicle.setPrice(resultSet.getDouble("price"));
-
                 vehicles.add(vehicle);
             }
         } catch (SQLException ex) {
@@ -165,11 +147,8 @@ public class VehicleDao {
 
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
             preparedStatement.setString(1, color);
-
             ResultSet resultSet = preparedStatement.executeQuery();
-
             while (resultSet.next()) {
                 Vehicle vehicle = new Vehicle();
                 vehicle.setVin(resultSet.getString("VIN"));
@@ -181,25 +160,20 @@ public class VehicleDao {
                 vehicle.setVehicleType(resultSet.getString("vehicleType"));
                 vehicle.setOdometer(resultSet.getInt("odometer"));
                 vehicle.setPrice(resultSet.getDouble("price"));
-
                 vehicles.add(vehicle);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
         return vehicles;
     }
 
     public List<Vehicle> searchByMileageRange(int minMileage, int maxMileage) {
         // TODO: Implement the logic to search vehicles by mileage range
         List<Vehicle> vehicles = new ArrayList<>();
-
         String sql = "SELECT VIN, make, model, year, SOLD, color, vehicleType, odometer, price FROM vehicles WHERE odometer BETWEEN ? AND ?";
-
         try (Connection connection = dataSource.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
             preparedStatement.setInt(1, minMileage);
             preparedStatement.setInt(2, maxMileage);
 
